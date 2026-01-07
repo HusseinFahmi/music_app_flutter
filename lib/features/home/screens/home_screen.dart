@@ -41,8 +41,9 @@ class HomeContent extends StatelessWidget {
               RecentlyPlayedList(
                 itemCount: ConstantValues.quranList.length,
                 songModel: ConstantValues.quranList,
-                onTap: () =>
-                    HomeController.navigateToPlayMusic(context: context),
+                onTap: (index) =>
+                    HomeController.navigateToPlayMusic(context: context,
+                        song: ConstantValues.quranList[index]),
               ),
 
               CategoryTextBox(text: 'Recommended music'),
@@ -50,8 +51,9 @@ class HomeContent extends StatelessWidget {
               SizedBox(height: 10),
 
               RecommendedMusicList(
-                onTap: () =>
-                    HomeController.navigateToPlayMusic(context: context),
+                onTap: (index) =>
+                    HomeController.navigateToPlayMusic(context: context,
+                        song: ConstantValues.quranList[index]),
                 songModel: ConstantValues.quranList,
                 itemCount: ConstantValues.quranList.length,
               ),

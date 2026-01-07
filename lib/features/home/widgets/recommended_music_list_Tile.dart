@@ -11,7 +11,7 @@ class RecommendedMusicList extends StatelessWidget {
     required this.itemCount,
   });
 
-  final void Function() onTap;
+  final void Function(int index) onTap;
   final List<SongModel> songModel;
   final int itemCount;
 
@@ -21,7 +21,9 @@ class RecommendedMusicList extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) => InkWell(
-        onTap: onTap,
+        onTap: () {
+          onTap(index);
+        },
         child: CustomListTileRecommendedMusic(songModel: songModel[index]),
       ),
       separatorBuilder: (context, index) => SizedBox(height: 8),

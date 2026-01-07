@@ -13,7 +13,7 @@ class RecentlyPlayedList extends StatelessWidget {
 
   final List<SongModel> songModel;
   final int itemCount;
-  final void Function() onTap;
+  final void Function(int index) onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class RecentlyPlayedList extends StatelessWidget {
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) => InkWell(
-          onTap: onTap,
+          onTap: () => onTap(index),
           child: RecentlyPlayed(songModel: songModel[index]),
         ),
         separatorBuilder: (context, index) => SizedBox(width: 17),

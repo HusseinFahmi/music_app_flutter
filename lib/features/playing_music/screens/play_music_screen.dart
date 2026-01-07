@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/play_music_controller.dart';
 
+import '../../../models/song_model.dart';
 import '../widgets/custom_play_music_app_bar.dart';
 import '../widgets/custom_playing_controller_row.dart';
 import '../widgets/play_music_info.dart';
@@ -10,8 +11,14 @@ import '../widgets/up_next_queue_item.dart';
 class PlayMusicScreen extends StatelessWidget {
   const PlayMusicScreen({super.key});
 
+
   @override
   Widget build(BuildContext context) {
+    final song = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as SongModel;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
 
@@ -36,7 +43,7 @@ class PlayMusicScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(height: 100),
-                  PlayMusicInfo(),
+                  PlayMusicInfo(song: song,),
 
                   CustomPlayingControllerRow(
                     value: 0.5,
