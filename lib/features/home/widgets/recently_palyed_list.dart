@@ -1,0 +1,34 @@
+import 'package:flutter/material.dart';
+
+import '../../../models/song_model.dart';
+import 'recently_played.dart';
+
+class RecentlyPlayedList extends StatelessWidget {
+  const RecentlyPlayedList({
+    super.key,
+    required this.songModel,
+    required this.itemCount,
+    required this.onTap,
+  });
+
+  final List<SongModel> songModel;
+  final int itemCount;
+  final void Function() onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 232,
+      padding: EdgeInsets.all(15),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) => InkWell(
+          onTap: onTap,
+          child: RecentlyPlayed(songModel: songModel[index]),
+        ),
+        separatorBuilder: (context, index) => SizedBox(width: 17),
+        itemCount: itemCount,
+      ),
+    );
+  }
+}
