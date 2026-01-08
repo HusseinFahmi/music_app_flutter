@@ -7,19 +7,19 @@ class ConstantValues {
       imagePath: ImageManager.surahAlImran,
       singerName: "Omar Dia",
       songName: 'Al Imran',
-      songPath: 'assets/images/quran/Surah_Al_Imran.png',
+      songPath: 'assets/quran/Al_Emran.mp3',
     ),
     SongModel(
       imagePath: ImageManager.surahAnNur,
       singerName: "Yasser Al-Dawsri",
       songName: 'Al Nur',
-      songPath: 'assets/images/quran/Surah_An-Nur.png',
+      songPath: 'assets/quran/Al_Noor.m4a',
     ),
     SongModel(
       imagePath: ImageManager.surahFussilat,
       singerName: "Nasser Al-Qutami",
       songName: 'Fussilat',
-      songPath: 'assets/images/quran/Surah_Fussilat.png',
+      songPath: 'assets/quran/Fosilat.mp3',
     ),
   ];
 }

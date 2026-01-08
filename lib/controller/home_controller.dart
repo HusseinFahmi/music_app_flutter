@@ -8,10 +8,6 @@ class HomeController {
     required BuildContext context,
     required SongModel song,
   }) {
-    Navigator.pushNamed(
-      context,
-      RouteName.playMusicScreen,
-      arguments: song,
-    );
+    Navigator.pushNamed(context, RouteName.playMusicScreen, arguments: song);
   }
 }

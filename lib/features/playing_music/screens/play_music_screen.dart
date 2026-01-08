@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/play_music_controller.dart';
 
@@ -8,16 +9,39 @@ import '../widgets/play_music_info.dart';
 import '../widgets/track_actions_bar.dart';
 import '../widgets/up_next_queue_item.dart';
 
-class PlayMusicScreen extends StatelessWidget {
+class PlayMusicScreen extends StatefulWidget {
   const PlayMusicScreen({super.key});
 
+  @override
+  State<PlayMusicScreen> createState() => _PlayMusicScreenState();
+}
+
+class _PlayMusicScreenState extends State<PlayMusicScreen> {
+
+  late final SongModel song;
 
   @override
-  Widget build(BuildContext context) {
-    final song = ModalRoute
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    song = ModalRoute
         .of(context)!
         .settings
         .arguments as SongModel;
+
+    play();
+  }
+
+  Future<void> play() async {
+    AudioCache audioCache = AudioCache(prefix: "");
+    Uri uri = await audioCache.load(song.songPath);
+    AudioPlayer audioPlayer = AudioPlayer();
+    audioPlayer.play(UrlSource(uri.toString()));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
 
     return Scaffold(
       extendBodyBehindAppBar: true,
