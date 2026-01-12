@@ -1,6 +1,6 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/play_music_controller.dart';
+import 'package:music_app/core/resources/constant_values.dart';
 
 import '../../../models/song_model.dart';
 import '../widgets/custom_play_music_app_bar.dart';
@@ -17,48 +17,91 @@ class PlayMusicScreen extends StatefulWidget {
 }
 
 class _PlayMusicScreenState extends State<PlayMusicScreen> {
+  bool isPlaying = true;
 
-  late final SongModel song;
+  late SongModel song;
+  late PlayMusicController _playMusicController;
+
+  bool _inited = false;
+
+  int currentIndex = 0;
+
+  late Future<String> _durationFuture;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_inited) return;
+    _inited = true;
 
-    song = ModalRoute
+    final passedSong = ModalRoute
         .of(context)!
         .settings
         .arguments as SongModel;
 
-    play();
+    currentIndex =
+        ConstantValues.quranList.indexWhere((s) => s.id == passedSong.id);
+    if (currentIndex == -1) currentIndex = 0;
+
+    song = ConstantValues.quranList[currentIndex];
+
+    _playMusicController = PlayMusicController(song);
+    _playMusicController.play();
+
+    _durationFuture = _playMusicController.musicDuration();
+
+    isPlaying = true;
   }
 
-  Future<void> play() async {
-    AudioCache audioCache = AudioCache(prefix: "");
-    Uri uri = await audioCache.load(song.songPath);
-    AudioPlayer audioPlayer = AudioPlayer();
-    audioPlayer.play(UrlSource(uri.toString()));
+
+  @override
+  void dispose() {
+    // _playMusicController.dispose();
+    super.dispose();
+  }
+
+  Future<void> togglePlayPause() async {
+    final newIsPlaying = await _playMusicController.toggleMusicState();
+    if (!mounted) return;
+    setState(() {
+      isPlaying = newIsPlaying;
+    });
+  }
+
+  Future<void> onTapSkipNext() async {
+    final length = ConstantValues.quranList.length;
+    if (length == 0) return;
+
+    int nextIndex = currentIndex + 1;
+    if (nextIndex >= length) nextIndex = 0;
+
+    final nextSong = ConstantValues.quranList[nextIndex];
+
+    setState(() {
+      currentIndex = nextIndex;
+      song = nextSong;
+      isPlaying = true;
+    });
+
+    _playMusicController = PlayMusicController(song);
+    await _playMusicController.play();
   }
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       extendBodyBehindAppBar: true,
-
       appBar: CustomPlayMusicAppBar(
         onPressed: () => PlayMusicController.popNavigate(context),
       ),
-
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [Color(0xff411F5C), Color(0xff261F5C)],
           ),
         ),
-
         child: SafeArea(
           child: SizedBox(
             width: double.infinity,
@@ -66,19 +109,30 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(height: 100),
-                  PlayMusicInfo(song: song,),
+                  const SizedBox(height: 100),
 
-                  CustomPlayingControllerRow(
-                    value: 0.5,
-                    onChanged: (double p1) {},
+                  PlayMusicInfo(song: song),
+
+                  FutureBuilder<String>(
+                    future: _durationFuture,
+                    builder: (context, snap) {
+                      final durationText = snap.data ?? "00:00";
+
+                      return CustomPlayingControllerRow(
+                        value: 0.5,
+                        onChanged: (double v) {},
+                        isPlaying: isPlaying,
+                        onTapPauseButton: togglePlayPause,
+                        onTapSkipNext: onTapSkipNext,
+                        songDuration: durationText,
+                        musicPosition: _playMusicController.musicPosition$,
+                      );
+                    },
                   ),
 
-                  SizedBox(height: 14),
-
-                  TrackActionsBar(),
-
-                  UpNextQueueItem(),
+                  const SizedBox(height: 14),
+                  const TrackActionsBar(),
+                  const UpNextQueueItem(),
                 ],
               ),
             ),

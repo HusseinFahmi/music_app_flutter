@@ -65,6 +65,7 @@ flutter:
     - assets/images/bottom_nav_icons/
     - assets/images/quran/
     - assets/quran/
+    - assets/quran/Al_Emran.mp3
 
   #   - images/a_dot_ham.jpeg
 

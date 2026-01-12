@@ -21,7 +21,7 @@ class CustomPlayMusicAppBar extends StatelessWidget
       title: CustomTextBox(title: 'Now playing', color: Colors.white, size: 18),
       backgroundColor: Colors.transparent,
 
-      actions: [
+      actions: const [
         Icon(Icons.share, size: 20, color: Colors.white),
         SizedBox(width: 22),
         Icon(Icons.more_vert, size: 20, color: Colors.white),

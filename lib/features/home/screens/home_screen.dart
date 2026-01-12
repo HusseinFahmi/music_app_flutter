@@ -4,11 +4,14 @@ import 'package:music_app/core/resources/constant_values.dart';
 import 'package:music_app/features/home/widgets/category_text_box.dart';
 import 'package:music_app/features/home/widgets/custom_text_field_homepage.dart';
 import 'package:music_app/features/home/widgets/recommended_music_list_Tile.dart';
+import 'package:music_app/models/song_model.dart';
 
 import '../widgets/recently_palyed_list.dart';
 
 class HomeContent extends StatelessWidget {
-  const HomeContent({super.key});
+  HomeContent({super.key});
+
+  final List<SongModel> quranList = ConstantValues.quranList;
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +42,11 @@ class HomeContent extends StatelessWidget {
               CategoryTextBox(text: 'Recently Played'),
 
               RecentlyPlayedList(
-                itemCount: ConstantValues.quranList.length,
-                songModel: ConstantValues.quranList,
+                itemCount: quranList.length,
+                songModel: quranList,
                 onTap: (index) =>
                     HomeController.navigateToPlayMusic(context: context,
-                        song: ConstantValues.quranList[index]),
+                        song: quranList[index]),
               ),
 
               CategoryTextBox(text: 'Recommended music'),
@@ -53,9 +56,9 @@ class HomeContent extends StatelessWidget {
               RecommendedMusicList(
                 onTap: (index) =>
                     HomeController.navigateToPlayMusic(context: context,
-                        song: ConstantValues.quranList[index]),
-                songModel: ConstantValues.quranList,
-                itemCount: ConstantValues.quranList.length,
+                        song: quranList[index]),
+                songModel: quranList,
+                itemCount: quranList.length,
               ),
 
               SizedBox(height: 5),
