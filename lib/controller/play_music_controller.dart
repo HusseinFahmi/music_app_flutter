@@ -39,10 +39,17 @@ class PlayMusicController {
 
   late final Stream<String> musicPosition$;
 
-  Future<void> play() async {
+  Future<Duration?> play() async {
     await audioPlayer.stop();
     final uri = await audioCache.load(song.songPath);
     await audioPlayer.play(UrlSource(uri.toString()));
+
+    for (int i = 0; i < 3; i++) {
+      final d = await audioPlayer.getDuration();
+      if (d != null && d > Duration.zero) return d;
+      await Future.delayed(const Duration(milliseconds: 5));
+    }
+    return null;
   }
 
   Future<void> stop() async {
