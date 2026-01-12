@@ -21,7 +21,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
   final void Function() onTapPauseButton;
   final void Function() onTapSkipNext;
 
-  final bool isPlaying; // ✅ non-null
+  final bool isPlaying;
   final String songDuration;
   final Stream<String> musicPosition;
 

@@ -16,6 +16,7 @@ class PlayMusicScreen extends StatefulWidget {
   State<PlayMusicScreen> createState() => _PlayMusicScreenState();
 }
 
+
 class _PlayMusicScreenState extends State<PlayMusicScreen> {
   bool isPlaying = true;
 
@@ -23,10 +24,9 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
   late PlayMusicController _playMusicController;
 
   bool _inited = false;
-
   int currentIndex = 0;
 
-  late Future<String> _durationFuture;
+  late Future<Duration?> _initFuture;
 
   @override
   void didChangeDependencies() {
@@ -46,26 +46,16 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
     song = ConstantValues.quranList[currentIndex];
 
     _playMusicController = PlayMusicController(song);
-    _playMusicController.play();
 
-    _durationFuture = _playMusicController.musicDuration();
+    _initFuture = _playMusicController.play();
 
     isPlaying = true;
-  }
-
-
-  @override
-  void dispose() {
-    // _playMusicController.dispose();
-    super.dispose();
   }
 
   Future<void> togglePlayPause() async {
     final newIsPlaying = await _playMusicController.toggleMusicState();
     if (!mounted) return;
-    setState(() {
-      isPlaying = newIsPlaying;
-    });
+    setState(() => isPlaying = newIsPlaying);
   }
 
   Future<void> onTapSkipNext() async {
@@ -84,7 +74,9 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
     });
 
     _playMusicController = PlayMusicController(song);
-    await _playMusicController.play();
+
+    _initFuture = _playMusicController.play();
+    setState(() {});
   }
 
   @override
@@ -94,31 +86,44 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
       appBar: CustomPlayMusicAppBar(
         onPressed: () => PlayMusicController.popNavigate(context),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff411F5C), Color(0xff261F5C)],
-          ),
-        ),
-        child: SafeArea(
-          child: SizedBox(
-            width: double.infinity,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 100),
+      body: FutureBuilder<Duration?>(
+        future: _initFuture,
+        builder: (context, snap) {
+          if (snap.connectionState != ConnectionState.done) {
+            return Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [Color(0xff411F5C), Color(0xff261F5C)],
+                ),
+              ),
+              child: const Center(child: CircularProgressIndicator()),
+            );
+          }
 
-                  PlayMusicInfo(song: song),
+          final d = snap.data;
+          final durationText = d == null ? "00:00" : _playMusicController
+              .formatDuration(d);
 
-                  FutureBuilder<String>(
-                    future: _durationFuture,
-                    builder: (context, snap) {
-                      final durationText = snap.data ?? "00:00";
-
-                      return CustomPlayingControllerRow(
+          return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [Color(0xff411F5C), Color(0xff261F5C)],
+              ),
+            ),
+            child: SafeArea(
+              child: SizedBox(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(height: 100),
+                      PlayMusicInfo(song: song),
+                      CustomPlayingControllerRow(
                         value: 0.5,
                         onChanged: (double v) {},
                         isPlaying: isPlaying,
@@ -126,19 +131,19 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
                         onTapSkipNext: onTapSkipNext,
                         songDuration: durationText,
                         musicPosition: _playMusicController.musicPosition$,
-                      );
-                    },
+                      ),
+                      const SizedBox(height: 14),
+                      const TrackActionsBar(),
+                      const UpNextQueueItem(),
+                    ],
                   ),
-
-                  const SizedBox(height: 14),
-                  const TrackActionsBar(),
-                  const UpNextQueueItem(),
-                ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 }
+

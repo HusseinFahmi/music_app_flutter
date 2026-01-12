@@ -42,7 +42,6 @@ class CustomSliderControl extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // current position
                 StreamBuilder<String>(
                   stream: musicPosition,
                   initialData: "00:00",
@@ -62,7 +61,6 @@ class CustomSliderControl extends StatelessWidget {
                   },
                 ),
 
-                // duration
                 Flexible(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
