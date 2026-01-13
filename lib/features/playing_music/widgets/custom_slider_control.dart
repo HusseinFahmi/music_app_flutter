@@ -7,13 +7,13 @@ class CustomSliderControl extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
-    required this.songDuration,
+    required this.musicDuration,
     required this.musicPosition,
   });
 
   final double value;
   final void Function(double) onChanged;
-  final String songDuration;
+  final Stream<String>musicDuration;
   final Stream<String> musicPosition;
 
   @override
@@ -61,16 +61,23 @@ class CustomSliderControl extends StatelessWidget {
                   },
                 ),
 
-                Flexible(
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    alignment: Alignment.centerRight,
-                    child: CustomTextBox(
-                      title: songDuration,
-                      color: const Color(0xffB1AFE9),
-                      size: 12,
-                    ),
-                  ),
+                StreamBuilder(
+                    stream: musicDuration,
+                    initialData: "00:00",
+                    builder: (context, snap) {
+                      final text = snap.data ?? "00:00";
+                      return Flexible(
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerRight,
+                          child: CustomTextBox(
+                            title: text,
+                            color: const Color(0xffB1AFE9),
+                            size: 12,
+                          ),
+                        ),
+                      );
+                    }
                 ),
               ],
             ),

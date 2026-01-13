@@ -8,11 +8,12 @@ class CustomPlayingControllerRow extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChanged,
+    required this.onTapPrevNext,
     required this.onTapPauseButton,
     required this.isPlaying,
     required this.onTapSkipNext,
-    required this.songDuration,
     required this.musicPosition,
+    required this.musicDuration,
   });
 
   final void Function(double) onChanged;
@@ -20,10 +21,11 @@ class CustomPlayingControllerRow extends StatelessWidget {
 
   final void Function() onTapPauseButton;
   final void Function() onTapSkipNext;
+  final void Function() onTapPrevNext;
 
   final bool isPlaying;
-  final String songDuration;
   final Stream<String> musicPosition;
+  final Stream<String> musicDuration;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +38,11 @@ class CustomPlayingControllerRow extends StatelessWidget {
             children: [
               const Icon(Icons.shuffle, size: 30, color: Colors.white),
 
-              const CustomSkipIconContainer(icon: Icons.skip_previous_outlined),
+              InkWell(
+                  onTap: onTapPrevNext,
+                  child: const CustomSkipIconContainer(
+                      icon: Icons.skip_previous_outlined)
+              ),
 
               InkWell(
                 onTap: onTapPauseButton,
@@ -71,7 +77,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
         CustomSliderControl(
           value: value,
           onChanged: onChanged,
-          songDuration: songDuration,
+          musicDuration: musicDuration,
           musicPosition: musicPosition,
         ),
       ],
