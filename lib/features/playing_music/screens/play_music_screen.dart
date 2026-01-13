@@ -91,11 +91,13 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
                     builder: (_, isPlaying, _) {
                       return CustomPlayingControllerRow(
                         value: 0.5,
-                        onChanged: (double v) {},
+                        onChanged: (double v) =>
+                            _playMusicController.seekToMs(v),
                         onTapPrevNext: _playMusicController.skipPrev,
                         onTapPauseButton: _playMusicController.togglePlayPause,
                         isPlaying: isPlaying,
                         onTapSkipNext: _playMusicController.skipNext,
+                        sliderPosition: _playMusicController.sliderRatio$,
                         musicPosition: _playMusicController.musicPositionText$,
                         musicDuration: _playMusicController.musicDurationText$,
                       );

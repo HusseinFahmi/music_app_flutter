@@ -5,20 +5,19 @@ import '../../../core/components/custom_text_box.dart';
 class CustomSliderControl extends StatelessWidget {
   const CustomSliderControl({
     super.key,
-    required this.value,
+    required this.sliderPosition,
     required this.onChanged,
     required this.musicDuration,
     required this.musicPosition,
   });
 
-  final double value;
+  final Stream<double> sliderPosition;
   final void Function(double) onChanged;
   final Stream<String>musicDuration;
   final Stream<String> musicPosition;
 
   @override
   Widget build(BuildContext context) {
-    final safeValue = value.clamp(0.0, 1.0);
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 26.0),
@@ -29,13 +28,19 @@ class CustomSliderControl extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Slider(
-              min: 0,
-              max: 1,
-              value: safeValue,
-              onChanged: onChanged,
-              activeColor: const Color(0xffB1AFE9),
-              inactiveColor: const Color(0xff2F5D9A),
+            StreamBuilder<double>(
+                initialData: 0.0,
+                stream: sliderPosition,
+                builder: (context, snap) {
+                  return Slider(
+                    min: 0,
+                    max: 1,
+                    value: snap.data!,
+                    onChanged: onChanged,
+                    activeColor: const Color(0xffB1AFE9),
+                    inactiveColor: const Color(0xff2F5D9A),
+                  );
+                }
             ),
             const SizedBox(height: 9),
 
@@ -43,8 +48,8 @@ class CustomSliderControl extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 StreamBuilder<String>(
-                  stream: musicPosition,
                   initialData: "00:00",
+                  stream: musicPosition,
                   builder: (context, snapshot) {
                     final text = snapshot.data ?? "00:00";
                     return Flexible(
