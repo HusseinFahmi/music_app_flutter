@@ -7,7 +7,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
   const CustomPlayingControllerRow({
     super.key,
     required this.value,
-    required this.onChanged,
+    required this.onChangeEnd,
     required this.onTapPrevNext,
     required this.onTapPauseButton,
     required this.isPlaying,
@@ -17,7 +17,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
     required this.musicDuration,
   });
 
-  final void Function(double) onChanged;
+  final void Function(double)? onChangeEnd;
   final double value;
 
   final void Function() onTapPauseButton;
@@ -78,7 +78,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
 
         CustomSliderControl(
           sliderPosition: sliderPosition,
-          onChanged: onChanged,
+          onChangeEnd: onChangeEnd,
           musicDuration: musicDuration,
           musicPosition: musicPosition,
         ),

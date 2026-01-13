@@ -124,11 +124,18 @@ class PlayMusicController {
   Stream<double> get sliderRatio$ => musicPosition$.asyncMap((pos) async {
     final dur = await audioPlayer.getDuration();
     if (dur == null || dur.inMilliseconds == 0) return 0.0;
-    return pos.inMilliseconds / dur.inMilliseconds;
+
+    final ratio = pos.inMilliseconds / dur.inMilliseconds;
+    return ratio.clamp(0.0, 1.0);
   });
 
-  Future<void> seekToMs(double ms) async {
-    await audioPlayer.seek(Duration(milliseconds: ms.round()));
+  Future<void> seekByRatio(double ratio) async {
+    final r = ratio.clamp(0.0, 1.0);
+    final dur = await audioPlayer.getDuration();
+    if (dur == null || dur.inMilliseconds == 0) return;
+
+    final targetMs = (dur.inMilliseconds * r).round();
+    await audioPlayer.seek(Duration(milliseconds: targetMs));
   }
 
   Future<void> dispose() async {

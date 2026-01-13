@@ -6,15 +6,15 @@ class CustomSliderControl extends StatelessWidget {
   const CustomSliderControl({
     super.key,
     required this.sliderPosition,
-    required this.onChanged,
+    required this.onChangeEnd,
     required this.musicDuration,
     required this.musicPosition,
   });
 
   final Stream<double> sliderPosition;
-  final void Function(double) onChanged;
   final Stream<String>musicDuration;
   final Stream<String> musicPosition;
+  final void Function(double)? onChangeEnd;
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,8 @@ class CustomSliderControl extends StatelessWidget {
                     min: 0,
                     max: 1,
                     value: snap.data!,
-                    onChanged: onChanged,
+                    onChangeEnd: onChangeEnd,
+                    onChanged: (value) {},
                     activeColor: const Color(0xffB1AFE9),
                     inactiveColor: const Color(0xff2F5D9A),
                   );
