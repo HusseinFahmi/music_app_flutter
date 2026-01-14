@@ -11,6 +11,8 @@ class CustomPlayingControllerRow extends StatelessWidget {
     required this.onTapPrevNext,
     required this.onTapPauseButton,
     required this.isPlaying,
+    required this.onTapLoop,
+    required this.isRepeatEnabled,
     required this.onTapSkipNext,
     required this.sliderPosition,
     required this.musicPosition,
@@ -23,8 +25,10 @@ class CustomPlayingControllerRow extends StatelessWidget {
   final void Function() onTapPauseButton;
   final void Function() onTapSkipNext;
   final void Function() onTapPrevNext;
+  final void Function() onTapLoop;
 
   final bool isPlaying;
+  final bool isRepeatEnabled;
   final Stream<double> sliderPosition;
   final Stream<String> musicPosition;
   final Stream<String> musicDuration;
@@ -70,7 +74,11 @@ class CustomPlayingControllerRow extends StatelessWidget {
                 ),
               ),
 
-              const Icon(Icons.repeat, size: 30, color: Colors.white),
+              InkWell(
+                  onTap: onTapLoop,
+                  child: Icon(Icons.repeat, size: 30,
+                      color: isRepeatEnabled ? Colors.blue : Colors.white)
+              ),
             ],
           ),
         ),

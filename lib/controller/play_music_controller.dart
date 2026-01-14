@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
+import 'package:music_app/models/player_ui_state.dart';
 import 'package:music_app/models/song_model.dart';
 
 class PlayMusicController {
@@ -19,8 +20,11 @@ class PlayMusicController {
   late final Stream<Duration> musicPosition$;
   late final Stream<Duration> musicDuration$;
 
-  final ValueNotifier<bool> isPlaying = ValueNotifier<bool>(false);
   final ValueNotifier<SongModel?> currentSong = ValueNotifier<SongModel?>(null);
+
+  final ValueNotifier<PlayerUiState> uiState = ValueNotifier(
+    const PlayerUiState(isPlaying: false, isRepeatEnabled: false,),);
+
 
   StreamSubscription? _completeSub;
 
@@ -34,9 +38,7 @@ class PlayMusicController {
       audioCache = AudioCache(prefix: "") {
     musicPosition$ = audioPlayer.onPositionChanged.asBroadcastStream();
     musicDuration$ = audioPlayer.onDurationChanged.asBroadcastStream();
-    _completeSub = audioPlayer.onPlayerComplete.listen((_) {
-      skipNext();
-    });
+    _completeSub = audioPlayer.onPlayerComplete.listen((_) => skipNext());
   }
 
   int get currentIndex => _currentIndex;
@@ -63,21 +65,26 @@ class PlayMusicController {
     await audioPlayer.stop();
     final uri = await audioCache.load(s.songPath);
     await audioPlayer.play(UrlSource(uri.toString()));
-    isPlaying.value = true;
+
+    uiState.value = PlayerUiState(
+        isPlaying: true, isRepeatEnabled: uiState.value.isRepeatEnabled);
   }
 
   Future<void> stop() async {
     await audioPlayer.stop();
-    isPlaying.value = false;
+    uiState.value = PlayerUiState(
+        isPlaying: false, isRepeatEnabled: uiState.value.isRepeatEnabled);
   }
 
   Future<void> togglePlayPause() async {
     if (audioPlayer.state == PlayerState.playing) {
       await audioPlayer.pause();
-      isPlaying.value = false;
+      uiState.value = PlayerUiState(
+          isPlaying: false, isRepeatEnabled: uiState.value.isRepeatEnabled);
     } else {
       await audioPlayer.resume();
-      isPlaying.value = true;
+      uiState.value = PlayerUiState(
+          isPlaying: true, isRepeatEnabled: uiState.value.isRepeatEnabled);
     }
   }
 
@@ -99,6 +106,18 @@ class PlayMusicController {
 
     currentSong.value = _playlist[_currentIndex];
     await play();
+  }
+
+  Future<void> loopMusic() async {
+    if (audioPlayer.releaseMode == ReleaseMode.loop) {
+      audioPlayer.setReleaseMode(ReleaseMode.release);
+      uiState.value = PlayerUiState(
+          isPlaying: uiState.value.isPlaying, isRepeatEnabled: false);
+    } else {
+      audioPlayer.setReleaseMode(ReleaseMode.loop);
+      uiState.value = PlayerUiState(
+          isPlaying: uiState.value.isPlaying, isRepeatEnabled: true);
+    }
   }
 
   String formatDuration(Duration duration) {
@@ -141,7 +160,7 @@ class PlayMusicController {
   Future<void> dispose() async {
     await _completeSub?.cancel();
     await audioPlayer.dispose();
-    isPlaying.dispose();
+    uiState.dispose();
     currentSong.dispose();
     _instance = null;
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/play_music_controller.dart';
 import 'package:music_app/core/resources/constant_values.dart';
+import 'package:music_app/models/player_ui_state.dart';
 
 import '../../../models/song_model.dart';
 import '../widgets/custom_play_music_app_bar.dart';
@@ -86,16 +87,18 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
                       return PlayMusicInfo(song: s);
                     },
                   ),
-                  ValueListenableBuilder<bool>(
-                    valueListenable: _playMusicController.isPlaying,
-                    builder: (_, isPlaying, _) {
+                  ValueListenableBuilder<PlayerUiState>(
+                    valueListenable: _playMusicController.uiState,
+                    builder: (_, uiState, _) {
                       return CustomPlayingControllerRow(
                         value: 0.5,
                         onChangeEnd: (double v) =>
                             _playMusicController.seekByRatio(v),
                         onTapPrevNext: _playMusicController.skipPrev,
                         onTapPauseButton: _playMusicController.togglePlayPause,
-                        isPlaying: isPlaying,
+                        isPlaying: uiState.isPlaying,
+                        onTapLoop: () => _playMusicController.loopMusic(),
+                        isRepeatEnabled: uiState.isRepeatEnabled,
                         onTapSkipNext: _playMusicController.skipNext,
                         sliderPosition: _playMusicController.sliderRatio$,
                         musicPosition: _playMusicController.musicPositionText$,
