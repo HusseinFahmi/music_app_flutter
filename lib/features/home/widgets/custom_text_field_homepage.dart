@@ -6,7 +6,9 @@ class CustomTextFieldHomepage extends StatelessWidget {
     required this.isSearchEnabled,
     required this.onTapSearchClose,
     required this.controller,
-  })final transparentBorder = OutlineInputBorder(
+  });
+
+  final transparentBorder = OutlineInputBorder(
     borderRadius: BorderRadius.circular(50),
     borderSide: const BorderSide(color: Colors.transparent),
   );
