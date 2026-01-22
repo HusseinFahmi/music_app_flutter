@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/widgets.dart';
+import 'package:music_app/models/player_ui_state.dart';
 import 'package:music_app/models/song_model.dart';
 
 class PlayMusicController {
@@ -19,8 +21,12 @@ class PlayMusicController {
   late final Stream<Duration> musicPosition$;
   late final Stream<Duration> musicDuration$;
 
-  final ValueNotifier<bool> isPlaying = ValueNotifier<bool>(false);
   final ValueNotifier<SongModel?> currentSong = ValueNotifier<SongModel?>(null);
+
+  final ValueNotifier<PlayerUiState> uiState = ValueNotifier(
+    const PlayerUiState(
+      isPlaying: false, isRepeatEnabled: false, isRandomEnabled: false,),);
+
 
   StreamSubscription? _completeSub;
 
@@ -34,9 +40,10 @@ class PlayMusicController {
       audioCache = AudioCache(prefix: "") {
     musicPosition$ = audioPlayer.onPositionChanged.asBroadcastStream();
     musicDuration$ = audioPlayer.onDurationChanged.asBroadcastStream();
-    _completeSub = audioPlayer.onPlayerComplete.listen((_) {
-      skipNext();
-    });
+    _completeSub = audioPlayer.onPlayerComplete.listen((_) =>
+    uiState.value.isRandomEnabled
+        ? playRandomNext()
+        : skipNext());
   }
 
   int get currentIndex => _currentIndex;
@@ -63,26 +70,45 @@ class PlayMusicController {
     await audioPlayer.stop();
     final uri = await audioCache.load(s.songPath);
     await audioPlayer.play(UrlSource(uri.toString()));
-    isPlaying.value = true;
+
+    uiState.value = PlayerUiState(
+        isPlaying: true,
+        isRepeatEnabled: uiState.value.isRepeatEnabled,
+        isRandomEnabled: uiState.value.isRandomEnabled);
   }
 
   Future<void> stop() async {
     await audioPlayer.stop();
-    isPlaying.value = false;
+    uiState.value = PlayerUiState(
+        isPlaying: false,
+        isRepeatEnabled: uiState.value.isRepeatEnabled,
+        isRandomEnabled: uiState.value.isRandomEnabled);
   }
 
   Future<void> togglePlayPause() async {
     if (audioPlayer.state == PlayerState.playing) {
       await audioPlayer.pause();
-      isPlaying.value = false;
+      uiState.value = PlayerUiState(
+          isPlaying: false,
+          isRepeatEnabled: uiState.value.isRepeatEnabled,
+          isRandomEnabled: uiState.value.isRandomEnabled);
     } else {
       await audioPlayer.resume();
-      isPlaying.value = true;
+      uiState.value = PlayerUiState(
+          isPlaying: true,
+          isRepeatEnabled: uiState.value.isRepeatEnabled,
+          isRandomEnabled: uiState.value.isRandomEnabled);
     }
   }
 
   Future<void> skipNext() async {
     if (!_playlistInited || _playlist.isEmpty) return;
+
+    if (uiState.value.isRandomEnabled) {
+      await playRandomNext();
+      return;
+    }
+
 
     _currentIndex++;
     if (_currentIndex >= _playlist.length) _currentIndex = 0;
@@ -93,6 +119,12 @@ class PlayMusicController {
 
   Future<void> skipPrev() async {
     if (!_playlistInited || _playlist.isEmpty) return;
+    if (_playlist.length <= 1) return;
+
+    if (uiState.value.isRandomEnabled) {
+      await playRandomNext();
+      return;
+    }
 
     _currentIndex--;
     if (_currentIndex < 0) _currentIndex = _playlist.length - 1;
@@ -100,6 +132,46 @@ class PlayMusicController {
     currentSong.value = _playlist[_currentIndex];
     await play();
   }
+
+  Future<void> loopMusic() async {
+    if (audioPlayer.releaseMode == ReleaseMode.loop) {
+      audioPlayer.setReleaseMode(ReleaseMode.release);
+      uiState.value = PlayerUiState(
+          isPlaying: uiState.value.isPlaying,
+          isRepeatEnabled: false,
+          isRandomEnabled: uiState.value.isRandomEnabled);
+    } else {
+      audioPlayer.setReleaseMode(ReleaseMode.loop);
+      uiState.value = PlayerUiState(
+          isPlaying: uiState.value.isPlaying,
+          isRepeatEnabled: true,
+          isRandomEnabled: uiState.value.isRandomEnabled);
+    }
+  }
+
+  void toggleShuffleMode() {
+    final cur = uiState.value;
+    uiState.value = PlayerUiState(
+      isPlaying: cur.isPlaying,
+      isRepeatEnabled: cur.isRepeatEnabled,
+      isRandomEnabled: !cur.isRandomEnabled,
+    );
+  }
+
+  Future<void> playRandomNext() async {
+    if (!_playlistInited || _playlist.isEmpty) return;
+    if (_playlist.length <= 1) return;
+
+    int r;
+    do {
+      r = Random().nextInt(_playlist.length);
+    } while (r == _currentIndex);
+
+    _currentIndex = r;
+    currentSong.value = _playlist[_currentIndex];
+    play();
+  }
+
 
   String formatDuration(Duration duration) {
     final hours = duration.inHours;
@@ -138,10 +210,11 @@ class PlayMusicController {
     await audioPlayer.seek(Duration(milliseconds: targetMs));
   }
 
+
   Future<void> dispose() async {
     await _completeSub?.cancel();
     await audioPlayer.dispose();
-    isPlaying.dispose();
+    uiState.dispose();
     currentSong.dispose();
     _instance = null;
   }
