@@ -4,6 +4,7 @@ import 'package:music_app/core/resources/constant_values.dart';
 import 'package:music_app/features/home/widgets/category_text_box.dart';
 import 'package:music_app/features/home/widgets/custom_text_field_homepage.dart';
 import 'package:music_app/features/home/widgets/recommended_music_list_Tile.dart';
+import 'package:music_app/models/home_ui_state.dart';
 import 'package:music_app/models/song_model.dart';
 
 import '../widgets/recently_palyed_list.dart';
@@ -12,6 +13,9 @@ class HomeContent extends StatelessWidget {
   HomeContent({super.key});
 
   final List<SongModel> quranList = ConstantValues.quranList;
+  final HomeController _homeController = HomeController();
+
+  // List<SongModel> get searchedSongs => _homeController.homeUiState.value.searchedSongs;
 
   @override
   Widget build(BuildContext context) {
@@ -36,32 +40,60 @@ class HomeContent extends StatelessWidget {
                   right: 31,
                   bottom: 15,
                 ),
-                child: CustomTextFieldHomepage(),
+                child: ValueListenableBuilder<HomeUiState>(
+                    valueListenable: _homeController.homeUiState,
+                    builder: (_, value, _) {
+                      return CustomTextFieldHomepage(
+                        isSearchEnabled: value.isSearchEnabled,
+                        onTapSearchClose: () => _homeController.closeSearch(),
+                        controller: _homeController.controller,
+                      );
+                    }
+                ),
               ),
 
-              CategoryTextBox(text: 'Recently Played'),
+              ValueListenableBuilder<HomeUiState>(
+                valueListenable: _homeController.homeUiState,
+                builder: (_, value, _) {
+                  if (!value.isSearchEnabled) return SizedBox.shrink();
+                  if (_homeController.controller.text.isEmpty)
+                    return SizedBox.shrink();
+                  return value.searchedSongs.isEmpty ? SizedBox(
+                    child: Center(child: Text("No Data Found", style: TextStyle(
+                        color: Colors.white),),),) :
+                  Column(
+                    children: [
+                      const CategoryTextBox(text: 'Recently Played'),
 
-              RecentlyPlayedList(
-                itemCount: quranList.length,
-                songModel: quranList,
-                onTap: (index) =>
-                    HomeController.navigateToPlayMusic(context: context,
-                        song: quranList[index]),
+                      RecentlyPlayedList(
+                        itemCount: value.searchedSongs.length,
+                        songModel: value.searchedSongs,
+                        onTap: (index) =>
+                            HomeController.navigateToPlayMusic(
+                              context: context,
+                              song: value.searchedSongs[index],
+                            ),
+                      ),
+                    ],
+                  );
+                },
               ),
 
-              CategoryTextBox(text: 'Recommended music'),
+              const CategoryTextBox(text: 'Recommended music'),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               RecommendedMusicList(
                 onTap: (index) =>
-                    HomeController.navigateToPlayMusic(context: context,
-                        song: quranList[index]),
+                    HomeController.navigateToPlayMusic(
+                      context: context,
+                      song: quranList[index],
+                    ),
                 songModel: quranList,
                 itemCount: quranList.length,
               ),
 
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
             ],
           ),
         ),

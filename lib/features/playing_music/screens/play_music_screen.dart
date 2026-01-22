@@ -94,6 +94,9 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
                         value: 0.5,
                         onChangeEnd: (double v) =>
                             _playMusicController.seekByRatio(v),
+                        onTapRandomMusic: () =>
+                            _playMusicController.toggleShuffleMode(),
+                        isRandomEnabled: uiState.isRandomEnabled,
                         onTapPrevNext: _playMusicController.skipPrev,
                         onTapPauseButton: _playMusicController.togglePlayPause,
                         isPlaying: uiState.isPlaying,

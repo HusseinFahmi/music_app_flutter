@@ -8,6 +8,8 @@ class CustomPlayingControllerRow extends StatelessWidget {
     super.key,
     required this.value,
     required this.onChangeEnd,
+    required this.onTapRandomMusic,
+    required this.isRandomEnabled,
     required this.onTapPrevNext,
     required this.onTapPauseButton,
     required this.isPlaying,
@@ -22,6 +24,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
   final void Function(double)? onChangeEnd;
   final double value;
 
+  final void Function() onTapRandomMusic;
   final void Function() onTapPauseButton;
   final void Function() onTapSkipNext;
   final void Function() onTapPrevNext;
@@ -29,6 +32,7 @@ class CustomPlayingControllerRow extends StatelessWidget {
 
   final bool isPlaying;
   final bool isRepeatEnabled;
+  final bool isRandomEnabled;
   final Stream<double> sliderPosition;
   final Stream<String> musicPosition;
   final Stream<String> musicDuration;
@@ -42,12 +46,17 @@ class CustomPlayingControllerRow extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Icon(Icons.shuffle, size: 30, color: Colors.white),
+              InkWell(
+                onTap: onTapRandomMusic,
+                child: Icon(Icons.shuffle, size: 30,
+                    color: isRandomEnabled ? Colors.blue : Colors.white),
+              ),
 
               InkWell(
-                  onTap: onTapPrevNext,
-                  child: const CustomSkipIconContainer(
-                      icon: Icons.skip_previous_outlined)
+                onTap: onTapPrevNext,
+                child: const CustomSkipIconContainer(
+                  icon: Icons.skip_previous_outlined,
+                ),
               ),
 
               InkWell(
@@ -75,9 +84,12 @@ class CustomPlayingControllerRow extends StatelessWidget {
               ),
 
               InkWell(
-                  onTap: onTapLoop,
-                  child: Icon(Icons.repeat, size: 30,
-                      color: isRepeatEnabled ? Colors.blue : Colors.white)
+                onTap: onTapLoop,
+                child: Icon(
+                  Icons.repeat,
+                  size: 30,
+                  color: isRepeatEnabled ? Colors.blue : Colors.white,
+                ),
               ),
             ],
           ),
