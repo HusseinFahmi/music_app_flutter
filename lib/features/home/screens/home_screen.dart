@@ -27,7 +27,7 @@ class HomeContent extends StatelessWidget {
     return SafeArea(
       child: Container(
         height: double.infinity,
-        decoration: BoxDecoration(gradient: GradientManager.mainBackground)),
+        decoration: BoxDecoration(gradient: GradientManager.mainBackground),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,8 +100,7 @@ class HomeContent extends StatelessWidget {
               const SizedBox(height: SizeManager.s5),
             ],
           ),
-        ),
-      ),
+        ),),
     );
   }
 }

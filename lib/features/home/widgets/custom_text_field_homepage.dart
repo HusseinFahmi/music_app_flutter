@@ -40,7 +40,7 @@ class CustomTextFieldHomepage extends StatelessWidget {
               )
             : Icon(Icons.cancel_outlined, color: Colors.transparent,),
 
-        prefixIcon: const Padding(adding: EdgeInsets.only(
+        prefixIcon: const Padding(padding: EdgeInsets.only(
             left: SizeManager.s20,
             right: SizeManager.s10,
           ),
