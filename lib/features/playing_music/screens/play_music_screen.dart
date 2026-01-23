@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/play_music_controller.dart';
 import 'package:music_app/core/resources/constant_values.dart';
+import 'package:music_app/core/resources/gradient_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 import 'package:music_app/models/player_ui_state.dart';
 
 import '../../../models/song_model.dart';
@@ -47,11 +49,7 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
         ),
         body: Container(
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Color(0xff411F5C), Color(0xff261F5C)],
-            ),
+            gradient: GradientManager.mainBackground,
           ),
           child: const Center(child: CircularProgressIndicator()),
         ),
@@ -66,11 +64,7 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
       body: Container(
         height: double.infinity,
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff411F5C), Color(0xff261F5C)],
-          ),
+          gradient: GradientManager.mainBackground,
         ),
         child: SafeArea(
           child: SizedBox(
@@ -79,7 +73,7 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 100),
+                  const SizedBox(height: SizeManager.s100),
                   ValueListenableBuilder<SongModel?>(
                     valueListenable: _playMusicController.currentSong,
                     builder: (_, s, _) {
@@ -109,7 +103,7 @@ class _PlayMusicScreenState extends State<PlayMusicScreen> {
                       );
                     },
                   ),
-                  const SizedBox(height: 14),
+                  const SizedBox(height: SizeManager.s14),
                   const TrackActionsBar(),
                   const UpNextQueueItem(),
                 ],

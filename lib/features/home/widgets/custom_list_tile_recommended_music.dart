@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 import 'package:music_app/models/song_model.dart';
 
 import '../../../core/components/custom_text_box.dart';
@@ -13,16 +15,16 @@ class CustomListTileRecommendedMusic extends StatelessWidget {
     return ListTile(
       title: CustomTextBox(
         title: songModel.songName,
-        color: Colors.white,
-        size: 15,
+        color: ColorManager.white,
+        size: SizeManager.s15,
       ),
       subtitle: CustomTextBox(
         title: songModel.singerName,
-        color: Color(0xffB1AFE9),
-        size: 12,
+        color: ColorManager.secondaryColor,
+        size: SizeManager.s12,
       ),
       leading: CircleAvatar(
-        radius: 35,
+        radius: SizeManager.s35,
         backgroundImage: AssetImage(songModel.imagePath),
       ),
       trailing: Icon(Icons.favorite_border),

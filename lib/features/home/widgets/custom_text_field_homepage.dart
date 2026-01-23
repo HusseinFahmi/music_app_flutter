@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
+import 'package:music_app/core/resources/strings_manager.dart';
 
 class CustomTextFieldHomepage extends StatelessWidget {
   CustomTextFieldHomepage({
@@ -9,7 +12,7 @@ class CustomTextFieldHomepage extends StatelessWidget {
   });
 
   final transparentBorder = OutlineInputBorder(
-    borderRadius: BorderRadius.circular(50),
+    borderRadius: BorderRadius.circular(SizeManager.s50),
     borderSide: const BorderSide(color: Colors.transparent),
   );
 
@@ -23,24 +26,27 @@ class CustomTextFieldHomepage extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        hintText: "Search Song",
+        hintText: StringsManager.searchSong,
 
-        contentPadding: EdgeInsets.symmetric(horizontal: 15),
+        contentPadding: EdgeInsets.symmetric(horizontal: SizeManager.s15),
         hintStyle: const TextStyle(
-          fontSize: 12,
+          fontSize: SizeManager.s12,
           fontWeight: FontWeight.w400,
-          color: Colors.white,
+          color: ColorManager.white,
         ),
 
         suffixIcon: isSearchEnabled ? InkWell(onTap: onTapSearchClose,
-            child: Icon(Icons.cancel_outlined, color: Colors.white,)) : Icon(
-          Icons.cancel_outlined, color: Colors.transparent,),
+                child: Icon(Icons.cancel_outlined, color: ColorManager.white),
+              )
+            : Icon(Icons.cancel_outlined, color: Colors.transparent,),
 
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(left: 20.0, right: 10),
-          child: Icon(Icons.search, color: Colors.white),
+        prefixIcon: const Padding(adding: EdgeInsets.only(
+            left: SizeManager.s20,
+            right: SizeManager.s10,
+          ),
+          child: Icon(Icons.search, color: ColorManager.white),
         ),
-        fillColor: Color(0xffB1AFE9),
+        fillColor: ColorManager.secondaryColor,
         filled: true,
 
         border: transparentBorder,

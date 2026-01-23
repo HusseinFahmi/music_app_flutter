@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 import 'package:music_app/models/song_model.dart';
 
 import 'custom_list_tile_recommended_music.dart';
@@ -26,7 +27,7 @@ class RecommendedMusicList extends StatelessWidget {
         },
         child: CustomListTileRecommendedMusic(songModel: songModel[index]),
       ),
-      separatorBuilder: (context, index) => SizedBox(height: 8),
+      separatorBuilder: (context, index) => SizedBox(height: SizeManager.s8),
       itemCount: itemCount,
     );
   }

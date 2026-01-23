@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 
 import '../../../core/components/custom_text_box.dart';
 
@@ -20,10 +22,11 @@ class CustomSliderControl extends StatelessWidget {
   Widget build(BuildContext context) {
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 26.0),
+      padding: const EdgeInsets.symmetric(horizontal: SizeManager.s26),
       child: SliderTheme(
         data: SliderTheme.of(context).copyWith(
-          thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 0),
+          thumbShape: const RoundSliderThumbShape(
+              enabledThumbRadius: SizeManager.s0),
           overlayShape: SliderComponentShape.noOverlay,
         ),
         child: Column(
@@ -33,17 +36,17 @@ class CustomSliderControl extends StatelessWidget {
                 stream: sliderPosition,
                 builder: (context, snap) {
                   return Slider(
-                    min: 0,
-                    max: 1,
+                    min: SizeManager.s0,
+                    max: SizeManager.s1,
                     value: snap.data!,
                     onChangeEnd: onChangeEnd,
                     onChanged: (value) {},
-                    activeColor: const Color(0xffB1AFE9),
-                    inactiveColor: const Color(0xff2F5D9A),
+                    activeColor: ColorManager.secondaryColor,
+                    inactiveColor: ColorManager.secondaryBlue,
                   );
                 }
             ),
-            const SizedBox(height: 9),
+            const SizedBox(height: SizeManager.s9),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,8 +62,8 @@ class CustomSliderControl extends StatelessWidget {
                         alignment: Alignment.centerLeft,
                         child: CustomTextBox(
                           title: text,
-                          color: const Color(0xffB1AFE9),
-                          size: 12,
+                          color: ColorManager.secondaryColor,
+                          size: SizeManager.s12,
                         ),
                       ),
                     );
@@ -78,8 +81,8 @@ class CustomSliderControl extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: CustomTextBox(
                             title: text,
-                            color: const Color(0xffB1AFE9),
-                            size: 12,
+                            color: ColorManager.secondaryColor,
+                            size: SizeManager.s12,
                           ),
                         ),
                       );

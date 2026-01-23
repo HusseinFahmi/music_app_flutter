@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/home_controller.dart';
+import 'package:music_app/core/components/custom_text_box.dart';
+import 'package:music_app/core/resources/color_manager.dart';
 import 'package:music_app/core/resources/constant_values.dart';
+import 'package:music_app/core/resources/gradient_manager.dart';
+import 'package:music_app/core/resources/margin_manager.dart';
+import 'package:music_app/core/resources/padding_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
+import 'package:music_app/core/resources/strings_manager.dart';
 import 'package:music_app/features/home/widgets/category_text_box.dart';
 import 'package:music_app/features/home/widgets/custom_text_field_homepage.dart';
 import 'package:music_app/features/home/widgets/recommended_music_list_Tile.dart';
@@ -15,40 +22,27 @@ class HomeContent extends StatelessWidget {
   final List<SongModel> quranList = ConstantValues.quranList;
   final HomeController _homeController = HomeController();
 
-  // List<SongModel> get searchedSongs => _homeController.homeUiState.value.searchedSongs;
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Container(
         height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff411F5C), Color(0xff261F5C)],
-          ),
-        ),
+        decoration: BoxDecoration(gradient: GradientManager.mainBackground)),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(
-                  top: 41,
-                  left: 31,
-                  right: 31,
-                  bottom: 15,
-                ),
+                padding: PaddingManager.homeSearchPadding,
                 child: ValueListenableBuilder<HomeUiState>(
-                    valueListenable: _homeController.homeUiState,
-                    builder: (_, value, _) {
-                      return CustomTextFieldHomepage(
-                        isSearchEnabled: value.isSearchEnabled,
-                        onTapSearchClose: () => _homeController.closeSearch(),
-                        controller: _homeController.controller,
-                      );
-                    }
+                  valueListenable: _homeController.homeUiState,
+                  builder: (_, value, _) {
+                    return CustomTextFieldHomepage(
+                      isSearchEnabled: value.isSearchEnabled,
+                      onTapSearchClose: () => _homeController.closeSearch(),
+                      controller: _homeController.controller,
+                    );
+                  },
                 ),
               ),
 
@@ -56,14 +50,24 @@ class HomeContent extends StatelessWidget {
                 valueListenable: _homeController.homeUiState,
                 builder: (_, value, _) {
                   if (!value.isSearchEnabled) return SizedBox.shrink();
-                  if (_homeController.controller.text.isEmpty)
+                  if (_homeController.controller.text.isEmpty) {
                     return SizedBox.shrink();
-                  return value.searchedSongs.isEmpty ? SizedBox(
-                    child: Center(child: Text("No Data Found", style: TextStyle(
-                        color: Colors.white),),),) :
-                  Column(
+                  }
+                  return value.searchedSongs.isEmpty
+                      ? Container(
+                    margin: MarginManager.verticalLarge,
+                    child: Center(
+                      child: CustomTextBox(
+                        title: StringsManager.noDataFound,
+                        color: ColorManager.white,
+                        size: SizeManager.s15,
+                      ),
+                    ),
+                  )
+                      : Column(
                     children: [
-                      const CategoryTextBox(text: 'Recently Played'),
+                      const CategoryTextBox(
+                          text: StringsManager.recentlyPlayed),
 
                       RecentlyPlayedList(
                         itemCount: value.searchedSongs.length,
@@ -79,9 +83,9 @@ class HomeContent extends StatelessWidget {
                 },
               ),
 
-              const CategoryTextBox(text: 'Recommended music'),
+              const CategoryTextBox(text: StringsManager.recommendedMusic),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: SizeManager.s10),
 
               RecommendedMusicList(
                 onTap: (index) =>
@@ -93,7 +97,7 @@ class HomeContent extends StatelessWidget {
                 itemCount: quranList.length,
               ),
 
-              const SizedBox(height: 5),
+              const SizedBox(height: SizeManager.s5),
             ],
           ),
         ),

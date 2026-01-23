@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 
 class CustomSkipIconContainer extends StatelessWidget {
   const CustomSkipIconContainer({super.key, required this.icon});
@@ -8,17 +10,17 @@ class CustomSkipIconContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
-      width: 36,
+      height: SizeManager.s36,
+      width: SizeManager.s36,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(SizeManager.s20),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [Color(0xff854F9F), Color(0xffB1AFE9)],
+          colors: [ColorManager.accentPurple, ColorManager.secondaryColor],
         ),
       ),
-      child: Icon(icon, size: 30, color: Colors.white),
+      child: Icon(icon, size: SizeManager.s30, color: ColorManager.white),
     );
   }
 }
