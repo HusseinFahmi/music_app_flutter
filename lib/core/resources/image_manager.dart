@@ -1,4 +1,6 @@
 class ImageManager {
+  static String onBoardingPerson = "assets/images/onBoardingPerson.png";
+
   static String alanWalker = "assets/images/alan-walker.jpg";
   static String justinBieber = "assets/images/justin-bieber.jpg";
   static String selenaGomez = "assets/images/selena-gomez.jpg";

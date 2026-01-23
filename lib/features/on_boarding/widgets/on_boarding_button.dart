@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 
 class OnBoardingButton extends StatelessWidget {
   const OnBoardingButton({super.key, required this.onTap, required this.text});
@@ -11,24 +13,25 @@ class OnBoardingButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 171,
-        height: 60,
+        width: SizeManager.s171,
+        height: SizeManager.s60,
         decoration: BoxDecoration(
-          border: Border(top: BorderSide(color: Colors.white, width: 2)),
-          borderRadius: BorderRadius.circular(50),
+          border: Border(top: BorderSide(
+              color: ColorManager.white, width: SizeManager.s2)),
+          borderRadius: BorderRadius.circular(SizeManager.s50),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xff2f5d9a), Color(0xff80cff2)],
+            colors: [ColorManager.secondaryBlue, ColorManager.accentSkyBlue],
           ),
         ),
         alignment: Alignment.center,
         child: Text(
           text,
           style: TextStyle(
-            color: Colors.white,
+            color: ColorManager.white,
             fontWeight: FontWeight.w500,
-            fontSize: 16,
+            fontSize: SizeManager.s16,
           ),
         ),
       ),

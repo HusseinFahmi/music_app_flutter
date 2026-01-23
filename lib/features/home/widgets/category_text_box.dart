@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:music_app/core/resources/padding_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 
 class CategoryTextBox extends StatelessWidget {
   const CategoryTextBox({super.key, required this.text});
@@ -8,12 +10,12 @@ class CategoryTextBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 50, right: 58, top: 15),
+      padding: PaddingManager.categoryTextBoxPadding,
       child: Text(
         text,
         style: TextStyle(
           color: Colors.white,
-          fontSize: 18,
+          fontSize: SizeManager.s18,
           fontWeight: FontWeight.w500,
         ),
       ),

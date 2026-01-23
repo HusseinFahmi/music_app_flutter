@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/core/components/custom_text_box.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
 import 'package:music_app/models/song_model.dart';
 
 class RecentlyPlayed extends StatelessWidget {
@@ -13,22 +15,24 @@ class RecentlyPlayed extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(SizeManager.s15),
           child: Image.asset(
             songModel.imagePath,
-            width: 151,
-            height: 151,
+            width: SizeManager.s151,
+            height: SizeManager.s151,
             fit: BoxFit.cover,
           ),
         ),
 
-        SizedBox(height: 9),
+        SizedBox(height: SizeManager.s9),
 
-        CustomTextBox(title: songModel.songName, color: Colors.white, size: 15),
+        CustomTextBox(title: songModel.songName,
+            color: ColorManager.white,
+            size: SizeManager.s15),
         CustomTextBox(
           title: songModel.singerName,
-          color: Color(0xffB1AFE9),
-          size: 12,
+          color: ColorManager.secondaryColor,
+          size: SizeManager.s12,
         ),
       ],
     );

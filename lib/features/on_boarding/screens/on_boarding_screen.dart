@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:music_app/controller/on_boarding_controller.dart';
+import 'package:music_app/core/resources/color_manager.dart';
+import 'package:music_app/core/resources/gradient_manager.dart';
+import 'package:music_app/core/resources/image_manager.dart';
+import 'package:music_app/core/resources/size_manager.dart';
+import 'package:music_app/core/resources/strings_manager.dart';
 import 'package:music_app/features/on_boarding/widgets/on_boarding_button.dart';
 
 class OnBoardingScreen extends StatelessWidget {
@@ -10,59 +15,54 @@ class OnBoardingScreen extends StatelessWidget {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xff411f5c), Color(0xff261f5c)],
-            stops: [0.0, 0.54],
-          ),
+          gradient: GradientManager.mainBackground,
         ),
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            SizedBox(height: 111),
+            SizedBox(height: SizeManager.s111),
             Text(
-              'Find Your\nFavourite',
+              StringsManager.findYourFavourite,
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                color: Colors.white,
-                fontSize: 50,
-                height: 1.2,
-                letterSpacing: 5,
+                color: ColorManager.white,
+                fontSize: SizeManager.s50,
+                height: SizeManager.s1_2,
+                letterSpacing: SizeManager.s5,
               ),
             ),
 
             Text(
-              'Music',
+              StringsManager.music,
               style: TextStyle(
                 fontWeight: FontWeight.w700,
-                fontSize: 50,
-                color: Color(0xff80CFF2),
+                fontSize: SizeManager.s50,
+                color: ColorManager.accentSkyBlue,
               ),
               textAlign: TextAlign.center,
             ),
 
-            SizedBox(height: 16),
+            SizedBox(height: SizeManager.s16),
 
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 70.0),
+              padding: const EdgeInsets.symmetric(horizontal: SizeManager.s70),
               child: Text(
-                'Find Your Latest Favourite Music\nFrom Our Collection',
+                StringsManager.subTile,
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
-                  fontSize: 15,
-                  color: Colors.white,
+                  fontSize: SizeManager.s15,
+                  color: ColorManager.white,
                 ),
                 textAlign: TextAlign.center,
               ),
             ),
 
-            SizedBox(height: 58),
+            SizedBox(height: SizeManager.s58),
 
             OnBoardingButton(
               onTap: () => OnBoardingController.navigateToHomePage(context),
-              text: 'Get Started',
+              text: StringsManager.getStarted,
             ),
 
             Expanded(
@@ -71,26 +71,26 @@ class OnBoardingScreen extends StatelessWidget {
                   Positioned.fill(
                     child: IgnorePointer(
                       child: Image.asset(
-                        "assets/images/onBoardingPerson.png",
+                        ImageManager.onBoardingPerson,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
 
                   Positioned(
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
+                    bottom: SizeManager.s0,
+                    right: SizeManager.s0,
+                    left: SizeManager.s0,
                     child: Container(
-                      height: 200,
+                      height: SizeManager.s200,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           colors: [
-                            Color(0xff3097C5).withAlpha(4),
-                            Color(0xff411F5C),
+                            ColorManager.primaryBlue.withAlpha(SizeManager.s4),
+                            ColorManager.backgroundMid,
                           ],
                         ),
                       ),
